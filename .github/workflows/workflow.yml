@@ -1,0 +1,106 @@
+name: Set initial environment
+run-name: ${{ github.actor }} running GitHub Actions
+
+# Controls when the workflow will run
+on:
+  push:
+    branches:
+      - 'main'
+    branches-ignore: # Pushes on branches won't start a build
+      - 'autodelivery**'
+      - 'bump-**'
+      - 'renovate/**'
+    paths-ignore: # Pushes that change only these files won't start the workflow
+      - 'README.md'
+      - '**.md'
+      - 'CHANGELOG.md'
+      - 'LICENSE'
+    
+  pull_request:
+    branches:
+      - 'dev'
+ # Run this workflow manually from the Actions tab
+  workflow_dispatch:
+    
+jobs:
+  test:
+    name: test
+    strategy:
+      matrix:
+        os: [ windows, macos, ubuntu ]
+        custom_token: [ true, false ]
+    runs-on: ${{ matrix.os }}-latest # Interpolating a variable value
+    steps:
+      - name: Checkout entire repository
+        uses: actions/checkout@v7
+        with:
+          path: action
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - name: Move the action outside the workspace
+        shell: bash
+        run: mv action ..
+      - name: Test with custom token
+        uses: ./../action
+        if: matrix.custom_token
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Test with default token
+        uses: ./../action
+        if: ${{ !matrix.custom_token }}
+      - run: echo "Job - test -> Status is ${{ job.status }}."
+
+  build:
+    name: build
+    strategy:
+      matrix:
+        os: [windows, macos, ubuntu]
+        jvm_version: [8, 11, 17, 21, 25] # Arbitrary variables
+        node-version: [18.x, 20.x, 24.x]
+        python_version: [3.7, 3.9]
+    runs-on: ${{ matrix.os }}-latest # Interpolating a variable value
+    steps:
+      - name: Checkout entire repository
+        uses: actions/checkout@v7
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+
+      - name: Set Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Rebuild the dist/ directory
+        run: npm run package
+
+      - name: Compare the expected and actual dist/ directories
+        run: |
+          if [ "$(git diff --ignore-space-at-eol dist/ | wc -l)" -gt "0" ]; then
+            echo "Detected uncommitted changes after build.  See status below:"
+            git diff
+            exit 1
+          fi
+        id: diff
+        
+      - uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.jvm_version }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python_version }} 
+      - shell: bash
+        run: java -version
+      - shell: bash
+        run: python --version
+
+      # If index.js different than expected, upload expected version as an artifact
+      - uses: actions/upload-artifact@v7
+        if: ${{ failure() && steps.diff.conclusion == 'failure' }}
+        with:
+          name: dist
+          path: dist/
+          
+      - run: echo "Job - build -> Status is ${{ job.status }}."
+
