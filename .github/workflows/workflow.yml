@@ -6,10 +6,6 @@ on:
   push:
     branches:
       - 'main'
-    branches-ignore: # Pushes on branches won't start a build
-      - 'autodelivery**'
-      - 'bump-**'
-      - 'renovate/**'
     paths-ignore: # Pushes that change only these files won't start the workflow
       - 'README.md'
       - '**.md'
