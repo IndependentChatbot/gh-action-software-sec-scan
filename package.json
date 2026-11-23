@@ -1,0 +1,31 @@
+{
+  "name": "gh-action-software-sec-scan",
+  "version": "1.0.0",
+  "description": "Contains the ZAP baseline scan action",
+  "main": "index.js",
+  "scripts": {
+    "package": "ncc build index.js -o dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IndependentChatbot/gh-action-software-sec-scan.git"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "ZAP"
+  ],
+  "author": "IndependentChatbot",
+  "bugs": {
+    "url": "https://github.com/IndependentChatbot/gh-action-software-sec-scan/issues"
+  },
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/exec": "^1.1.1",
+    "@zaproxy/actions-common-scans": "^1.4.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.36.1"
+  }
+}
