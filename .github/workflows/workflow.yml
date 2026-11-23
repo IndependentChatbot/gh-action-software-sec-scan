@@ -71,7 +71,14 @@ jobs:
       - shell: bash
         run: java -version
       - shell: bash
-        run: python --version
+        run: python --version     
+
+      # If index.js different than expected, upload expected version as an artifact
+      - uses: actions/upload-artifact@v7
+        if: ${{ failure() }}
+        with:
+          name: dist
+          path: dist/
 
       - name: Compare the expected and actual dist/ directories
         run: |
@@ -80,14 +87,7 @@ jobs:
             git diff
             exit 1
           fi
-        id: diff       
-
-      # If index.js different than expected, upload expected version as an artifact
-      - uses: actions/upload-artifact@v7
-        if: ${{ failure() && steps.diff.conclusion == 'failure' }}
-        with:
-          name: dist
-          path: dist/
+        id: diff 
           
       - run: echo "Job - build -> Status is ${{ job.status }}."
 
