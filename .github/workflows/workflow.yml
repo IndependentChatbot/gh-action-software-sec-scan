@@ -115,7 +115,7 @@ jobs:
         path: ./artifacts
         pattern: artifacts-*
         merge-multiple: true
-    - run: ls -R artifacts
+    - run: ls -R ./artifacts
     - run: pwd
 
     - run: echo "Job - download -> Status is ${{ job.status }}."
