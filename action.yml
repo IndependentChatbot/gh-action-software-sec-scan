@@ -4,25 +4,38 @@ inputs:
   token:
     description: The token for checking out the repository
     required: false
-    default: ''
+    default: ${{ github.token }}
+  target:
+    description: 'Target URL'
+    required: true
+  rules_file_name:
+    description: 'Relative path of the ZAP configuration file'
+    required: false
+  docker_name:
+    description: 'The Docker file to be executed'
+    required: true
+    default: 'ghcr.io/zaproxy/zaproxy:stable'
+  cmd_options:
+    description: 'Additional command line options'
+    required: false
+  issue_title:
+    description: 'The title for the GitHub issue to be created'
+    required: false
+    default: 'ZAP Scan Baseline Report'
+  fail_action:
+    description: 'The action status will be set to fail if ZAP identifies any alerts during the baseline scan'
+    required: false
+    default: false
+  allow_issue_writing:
+    description: 'The action will file the report to the GitHub issue using the issue_title input'
+    required: false
+    default: true
+  artifact_name:
+    description: 'The name of the artifact that contains the ZAP reports'
+    required: false
+    default: 'zap_scan'
 
 runs:
-  using: "composite"
-  steps:
-    - name: Checkout with custom token
-      uses: actions/checkout@v7.0.1
-      if: inputs.token != ''
-      with:
-        fetch-depth: 0
-        submodules: recursive
-        token: ${{ inputs.token }}
-    - name: Checkout with default token
-      uses: actions/checkout@v7.0.1
-      if: inputs.token == ''
-      with:
-        fetch-depth: 0
-        submodules: recursive
-    - name: Fetch tags
-      shell: bash
-      run: git fetch --tags -f
-      
+  #using: "composite"
+  using: 'node24'
+  main: 'dist/index.js' 
