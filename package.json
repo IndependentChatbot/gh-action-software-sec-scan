@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zaproxy/action-baseline.git"
+    "url": "git+https://github.com/IndependentChatbot/gh-action-software-sec-scan.git"
   },
   "keywords": [
     "GitHub",
