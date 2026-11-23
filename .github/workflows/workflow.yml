@@ -50,8 +50,8 @@ jobs:
     strategy:
       matrix:
         os: [windows, macos, ubuntu]
-        include:
-          - jvm_version: [25.x] # Arbitrary variables
+        #include:
+          #- jvm_version: [25.x] # Arbitrary variables
           #- node-version: [18.x, 20.x, 24.x]
           #- python_version: [3.9.x, 3.16.x]
     runs-on: ${{ matrix.os }}-latest # Interpolating a variable value
@@ -83,7 +83,7 @@ jobs:
       - uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
-          java-version: ${{ matrix.jvm_version }}
+          java-version: '25'
       - uses: actions/setup-python@v7
         #with:
           #python-version: ${{ matrix.python_version }} 
