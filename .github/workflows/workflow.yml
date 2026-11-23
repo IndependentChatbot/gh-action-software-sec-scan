@@ -104,3 +104,19 @@ jobs:
           cmd_options: '-a'
       
       - run: echo "Job - zap_scan -> Status is ${{ job.status }}."
+
+  download:
+    needs: zap_scan
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v8
+      with:
+        path: ./artifacts
+        pattern: artifacts-*
+        merge-multiple: true
+    - run: ls -R artifacts
+    - run: pwd
+
+    - run: echo "Job - download -> Status is ${{ job.status }}."
+  
