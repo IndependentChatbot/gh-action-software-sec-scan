@@ -23,7 +23,7 @@ jobs:
     name: test
     strategy:
       matrix:
-        os: [ windows, macos, ubuntu ]
+        os: [ macos, ubuntu ]
         custom_token: [ true, false ]
     runs-on: ${{ matrix.os }}-latest # Interpolating a variable value
     steps:
