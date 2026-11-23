@@ -1,0 +1,28 @@
+name: 'Checkout entire repository'
+description: 'Checkout all commits, all tags, and initialize all submodules.'
+inputs:
+  token:
+    description: The token for checking out the repository
+    required: false
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout with custom token
+      uses: actions/checkout@v7.0.1
+      if: inputs.token != ''
+      with:
+        fetch-depth: 0
+        submodules: recursive
+        token: ${{ inputs.token }}
+    - name: Checkout with default token
+      uses: actions/checkout@v7.0.1
+      if: inputs.token == ''
+      with:
+        fetch-depth: 0
+        submodules: recursive
+    - name: Fetch tags
+      shell: bash
+      run: git fetch --tags -f
+      
