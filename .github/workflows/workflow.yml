@@ -49,7 +49,7 @@ jobs:
     name: build
     strategy:
       matrix:
-        os: [windows, macos, ubuntu]
+        os: [ macos, ubuntu]
         #include:
           #- jvm_version: [25.x] # Arbitrary variables
           #- node-version: [18.x, 20.x, 24.x]
