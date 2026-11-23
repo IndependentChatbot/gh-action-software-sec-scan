@@ -50,10 +50,10 @@ jobs:
     strategy:
       matrix:
         os: [windows, macos, ubuntu]
-        include:
-          - jvm_version: [17.x, 21.x, 25.x] # Arbitrary variables
-          - node-version: [18.x, 20.x, 24.x]
-          - python_version: [3.9.x, 3.16.x]
+        #include:
+          #- jvm_version: [17.x, 21.x, 25.x] # Arbitrary variables
+          #- node-version: [18.x, 20.x, 24.x]
+          #- python_version: [3.9.x, 3.16.x]
     runs-on: ${{ matrix.os }}-latest # Interpolating a variable value
     steps:
       - name: Checkout entire repository
@@ -62,8 +62,8 @@ jobs:
 
       - name: Set Node.js
         uses: actions/setup-node@v7
-        with:
-          node-version: ${{ matrix.node-version }}
+        #with:
+          #node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: npm install
@@ -83,10 +83,10 @@ jobs:
       - uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
-          java-version: ${{ matrix.jvm_version }}
+          #java-version: ${{ matrix.jvm_version }}
       - uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python_version }} 
+        #with:
+          #python-version: ${{ matrix.python_version }} 
       - shell: bash
         run: java -version
       - shell: bash
