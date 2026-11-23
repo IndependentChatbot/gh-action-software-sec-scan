@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         os: [ macos, ubuntu ]
-        custom_token: [ true, false ]
+        #custom_token: [ true, false ]
     runs-on: ${{ matrix.os }}-latest # Interpolating a variable value
     steps:
       - name: Checkout entire repository
@@ -40,9 +40,9 @@ jobs:
     strategy:
       matrix:
         os: [ macos, ubuntu]
-        #include:
+        include:
           #- jvm_version: [25.x] # Arbitrary variables
-          #- node-version: [18.x, 20.x, 24.x]
+          - node-version: [24.x]
           #- python_version: [3.9.x, 3.16.x]
     runs-on: ${{ matrix.os }}-latest # Interpolating a variable value
     steps:
@@ -51,9 +51,9 @@ jobs:
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
 
       - name: Set Node.js
-        uses: actions/setup-node@v7
-        #with:
-          #node-version: ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: npm install
